@@ -832,7 +832,7 @@ MonoBehaviour:
     x: -4.75
     y: 0.53
     z: 0
-  _startingCardsInOrigin: 5
+  _startingCardsInOrigin: 144
   _destinationStackPosition:
     x: 4.75
     y: 0.53

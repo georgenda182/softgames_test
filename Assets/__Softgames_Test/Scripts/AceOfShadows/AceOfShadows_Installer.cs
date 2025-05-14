@@ -5,7 +5,7 @@ public class AceOfShadows_Installer : MonoBehaviour
 {
     [Header("Origin stack")]
     [SerializeField] private float3 _originStackPosition;
-    [SerializeField] private int _startingCardsInOrigin = 144;
+    [SerializeField, Range(1, 144)] private int _startingCardsInOrigin = 144;
 
     [Header("Destination stack")]
     [SerializeField] private float3 _destinationStackPosition;
