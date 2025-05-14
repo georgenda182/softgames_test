@@ -14,6 +14,7 @@ public class ObjectPool
     {
         _prefab = prefab;
         _instantiateObjects = new HashSet<PooledObject>();
+        _recycledObjects = new Queue<PooledObject>();
     }
 
     public void Init(int numberOfInitialObjects)

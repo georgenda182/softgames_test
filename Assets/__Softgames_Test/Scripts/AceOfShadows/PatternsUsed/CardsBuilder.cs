@@ -1,3 +1,4 @@
+using Unity.Mathematics;
 using UnityEngine;
 
 // Builder pattern
@@ -10,10 +11,12 @@ public class CardsBuilder : MonoBehaviour
 
     // This vars are used for building a new card
     private int _builtCardNumber;
+    private float3 _builtCardPosition;
 
     private void Awake()
     {
         _cardsPool =  new ObjectPool(_cardPrefab);
+        _cardsPool.Init(5);
     }
 
     public CardsBuilder WithNumber(int number)
@@ -22,11 +25,17 @@ public class CardsBuilder : MonoBehaviour
         return this;
     }
 
+    public CardsBuilder WithPosition(float3 position)
+    {
+        _builtCardPosition = position;
+        return this;
+    }
+
     public Card Build()
     {
         Card builtCard = _cardsPool.GetObject<Card>();
         Sprite builtCardSprite = _cardSprites[_builtCardNumber - 1];
-        builtCard.Configure(builtCardSprite);
+        builtCard.Configure(builtCardSprite, _builtCardNumber, _builtCardPosition);
         return builtCard;
     }
 }

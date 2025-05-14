@@ -101,3 +101,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _spriteRenderer: {fileID: 8195119339050005619}
+  _movementDuration: 0.75
+  _number: 0
