@@ -1,117 +1,54 @@
-using System;
-using System.Collections;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class ContentDownloader : MonoBehaviour
+public class ContentDownloader
 {
-    [Serializable]
-    public class Chat
+    private string URL = "https://private-624120-softgamesassignment.apiary-mock.com/v3/magicwords";
+
+    public ContentDownloader(string url)
     {
-        public Message[] dialogue;
-        public Avatar[] avatars;
+        URL = url;
     }
 
-    [Serializable]
-    public class Message
+    public async Task<ChatDownloadResult> DownloadChat()
     {
-        public string name;
-        public string text;
-    }
+        ChatDownloadResult chatDownloadResult = new();
 
-    [Serializable]
-    public class Avatar
-    {
-        public string name;
-        public string url;
-        public string position;
-    }
-
-    private readonly string URL = "https://private-624120-softgamesassignment.apiary-mock.com/v3/magicwords";
-
-    private string _downloadedJson;
-
-    [SerializeField] private AvatarNameToTexture _avatarNameToTexture;
-    [SerializeField] private Chat _chat;
-    [SerializeField] private ChatView _chatView;
-
-    private void Start()
-    {
-        StartCoroutine(GetText());
-    }
-
-    private IEnumerator GetText()
-    {
         using (UnityWebRequest request = UnityWebRequest.Get(URL))
         {
-            yield return request.SendWebRequest();
+            await request.SendWebRequest();
             if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
             {
-                Debug.Log(request.error);
+                Debug.LogError(request.error);
             }
             else
             {
-                _downloadedJson = request.downloadHandler.text;
-                _chat = JsonUtility.FromJson<Chat>(_downloadedJson);
-
-                StartCoroutine(GetAvatars());
+                chatDownloadResult.Success = true;
+                string downloadedJson = request.downloadHandler.text;
+                chatDownloadResult.Chat = JsonUtility.FromJson<Chat>(downloadedJson);
+                DialogueFormatter.Format(ref chatDownloadResult.Chat.dialogue);
             }
+            return chatDownloadResult;
         }
     }
 
-    private IEnumerator GetAvatars()
+    public async Task DownloadAvatars(Avatar[] avatars, NameToAvatar nameToAvatar)
     {
-        for (int i = 0; i < _chat.avatars.Length; i++)
+        for (int i = 0; i < avatars.Length; i++)
         {
-            using (UnityWebRequest request = UnityWebRequestTexture.GetTexture(_chat.avatars[i].url))
+            using (UnityWebRequest request = UnityWebRequestTexture.GetTexture(avatars[i].url))
             {
-                yield return request.SendWebRequest();
+                await request.SendWebRequest();
                 if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
                 {
-                    Debug.Log(request.error);
+                    Debug.LogWarning($"Could not register avatar \"{avatars[i].url}\". Error displayed below:\n\n{request.error}");
                 }
                 else
                 {
-                    _avatarNameToTexture.SetAvatar(_chat.avatars[i].name, DownloadHandlerTexture.GetContent(request));
+                    nameToAvatar.SetAvatar(avatars[i].name, DownloadHandlerTexture.GetContent(request), avatars[i].position);
                 }
             }
         }
-        ChangeIdsToEmojis();
-        SetDialogueToChatView();
-    }
-
-    private void ChangeIdsToEmojis()
-    {
-        string[] ids =
-        {
-            "{satisfied}",
-            "{intrigued}",
-            "{neutral}",
-            "{affirmative}",
-            "{win}",
-            "{laughing}"
-        };
-        string[] emojis =
-        {
-            "<sprite name=\"satisfied\">",
-            "<sprite name=\"intrigued\">",
-            "<sprite name=\"neutral\">",
-            "<sprite name=\"affirmative\">",
-            "<sprite name=\"win\">",
-            "<sprite name=\"laughing\">"
-        };
-
-        for (int i = 0; i < _chat.dialogue.Length; i++)
-        {
-            for (int j = 0; j < ids.Length; j++)
-            {
-                _chat.dialogue[i].text = _chat.dialogue[i].text.Replace(ids[j], emojis[j]);
-            }
-        }
-    }
-
-    private void SetDialogueToChatView()
-    {
-        _chatView.SetDialogue(_chat.dialogue);
     }
 }

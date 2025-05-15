@@ -4,18 +4,19 @@ using UnityEngine.UI;
 
 public class MessageView : MonoBehaviour
 {
-    [SerializeField] private RawImage _avatar;
+    [SerializeField] private HorizontalLayoutGroup _layout;
+    [SerializeField] private RawImage _avatarImg;
     [SerializeField] private TextMeshProUGUI _name;
     [SerializeField] private TextMeshProUGUI _body;
 
-    public void Configure(Texture avatar, string name, string body)
+    public void Configure(DefinedAvatar avatar, string name, string body)
     {
-        if (avatar != null)
-        {
-            _avatar.texture = avatar;
-        }
+        _layout.reverseArrangement = avatar.IsRightPosition;
 
+        _avatarImg.texture = avatar.Texture;
         _name.text = name;
+
         _body.text = body;
+        _body.alignment = avatar.IsRightPosition ? TextAlignmentOptions.MidlineRight : TextAlignmentOptions.MidlineLeft;
     }
 }
