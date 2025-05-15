@@ -1,13 +1,13 @@
 using DG.Tweening;
 using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 [RequireComponent(typeof(SpriteRenderer))]
 public class Card : PooledObject
 {
     [SerializeField] private SpriteRenderer _spriteRenderer;
     [SerializeField] private float _movementDuration = 0.75f;
+    [SerializeField] private Vector3 _preparationOffset = new Vector3(0.25f, 0, 0);
 
     [SerializeField] private int _number;
 
@@ -27,7 +27,7 @@ public class Card : PooledObject
 
     public void PrepareToBeMoved(TweenCallback onMovementFinished = null)
     {
-        float3 preparationPosition = transform.position + new Vector3(0.25f, 0, 0);
+        float3 preparationPosition = transform.position + _preparationOffset;
         transform.DOMove(preparationPosition, _movementDuration)
             .onComplete = onMovementFinished;
     }

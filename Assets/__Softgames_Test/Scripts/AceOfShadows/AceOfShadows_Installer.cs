@@ -26,8 +26,8 @@ public class AceOfShadows_Installer : MonoBehaviour
             cardsInOrigin[i] = i + 1;
         }
 
-        _originCardsStack = new CardsStack(_cardsBuilder, new float3(-4.75f, 0.53f, 0f), cardsInOrigin);
-        _destinationCardsStack = new CardsStack(_cardsBuilder, new float3(4.75f, 0.53f, 0f));
+        _originCardsStack = new CardsStack(_cardsBuilder, _originStackPosition, cardsInOrigin);
+        _destinationCardsStack = new CardsStack(_cardsBuilder, _destinationStackPosition);
 
         _ui.Configure(_originCardsStack, _destinationCardsStack);
 

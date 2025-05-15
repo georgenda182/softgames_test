@@ -2,8 +2,8 @@
 
 public class UIVisualization : MonoBehaviour
 {
-    [SerializeField] private TMPro.TextMeshProUGUI _originAmountText;
-    [SerializeField] private TMPro.TextMeshProUGUI _destinationAmountText;
+    [SerializeField] private TMPro.TextMeshPro _originAmountText;
+    [SerializeField] private TMPro.TextMeshPro _destinationAmountText;
 
     [SerializeField] private GameObject _successMessage;
 

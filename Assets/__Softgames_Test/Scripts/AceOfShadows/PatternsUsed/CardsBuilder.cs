@@ -6,6 +6,7 @@ public class CardsBuilder : MonoBehaviour
 {
     [SerializeField] private Card _cardPrefab;
     [SerializeField] private Sprite[] _cardSprites;
+    [SerializeField] private int _initialPooledCards = 5;
 
     private ObjectPool _cardsPool;
 
@@ -15,8 +16,8 @@ public class CardsBuilder : MonoBehaviour
 
     private void Awake()
     {
-        _cardsPool =  new ObjectPool(_cardPrefab);
-        _cardsPool.Init(5);
+        _cardsPool = new ObjectPool(_cardPrefab);
+        _cardsPool.Init(_initialPooledCards);
     }
 
     public CardsBuilder WithNumber(int number)
